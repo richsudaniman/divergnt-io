@@ -13,8 +13,8 @@ import Dashboard from './pages/Dashboard';
 import ConceptMapPage from './pages/ConceptMapPage';
 import ExamPrepSetup from './pages/ExamPrepSetup';
 import StudyDashboard from './pages/StudyDashboard';
-import study-notes-viewer from './pages/study-notes-viewer';
-import exam-prep-history from './pages/exam-prep-history';
+import StudyNotesViewer from './pages/study-notes-viewer';
+import ExamPrepHistory from './pages/exam-prep-history';
 import BrainDump from './pages/BrainDump';
 import ProcessedDump from './pages/ProcessedDump';
 import BrainDumpResults from './pages/BrainDumpResults';
@@ -58,8 +58,8 @@ const AuthenticatedApp = () => {
       <Route path="/ConceptMapPage" element={<ConceptMapPage />} />
       <Route path="/ExamPrepSetup" element={<ExamPrepSetup />} />
       <Route path="/StudyDashboard" element={<StudyDashboard />} />
-      <Route path="/study-notes-viewer" element={<study-notes-viewer />} />
-      <Route path="/exam-prep-history" element={<exam-prep-history />} />
+      <Route path="/study-notes-viewer" element={<StudyNotesViewer />} />
+      <Route path="/exam-prep-history" element={<ExamPrepHistory />} />
       <Route path="/BrainDump" element={<BrainDump />} />
       <Route path="/ProcessedDump" element={<ProcessedDump />} />
       <Route path="/BrainDumpResults" element={<BrainDumpResults />} />
