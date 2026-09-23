@@ -1,0 +1,76 @@
+{
+  "name": "Task",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name/title of the task"
+    },
+    "description": {
+      "type": "string",
+      "description": "Full assignment description or overview text"
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date",
+      "description": "When the task is due"
+    },
+    "workStartDate": {
+      "type": "string",
+      "format": "date",
+      "description": "When the user wants to start working on this task"
+    },
+    "classId": {
+      "type": "string",
+      "description": "ID of the associated class"
+    },
+    "processingStatus": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "processing",
+        "completed",
+        "error"
+      ],
+      "default": "pending",
+      "description": "Status of AI phase breakdown processing"
+    },
+    "isCompleted": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the entire task is completed"
+    },
+    "completedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the task was completed"
+    },
+    "estimatedDuration": {
+      "type": "number",
+      "default": 60,
+      "description": "Estimated duration in minutes to complete this task"
+    },
+    "taskType": {
+      "type": "string",
+      "enum": [
+        "essay",
+        "exam",
+        "project",
+        "homework",
+        "lab_report",
+        "presentation",
+        "reading",
+        "quiz",
+        "discussion",
+        "other"
+      ],
+      "default": "other",
+      "description": "Type of assignment for better scheduling and templates"
+    }
+  },
+  "required": [
+    "name",
+    "description",
+    "deadline"
+  ]
+}

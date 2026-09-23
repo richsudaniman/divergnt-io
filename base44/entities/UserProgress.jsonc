@@ -1,0 +1,76 @@
+{
+  "name": "UserProgress",
+  "type": "object",
+  "properties": {
+    "currentWeek": {
+      "type": "string",
+      "format": "date",
+      "description": "Start date of the current week for tracking"
+    },
+    "weeklyScore": {
+      "type": "number",
+      "default": 0,
+      "description": "Points accumulated this week"
+    },
+    "currentLevel": {
+      "type": "string",
+      "enum": [
+        "butter_knife",
+        "nerf_gun",
+        "laser_shooter",
+        "nuke",
+        "atomic_bomb",
+        "black_hole",
+        "reality_bender"
+      ],
+      "default": "butter_knife",
+      "description": "Current Academic Weapon level"
+    },
+    "currentStreak": {
+      "type": "number",
+      "default": 0,
+      "description": "Current consecutive days of engagement"
+    },
+    "lastActiveDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Last date user was active"
+    },
+    "longestStreak": {
+      "type": "number",
+      "default": 0,
+      "description": "Longest streak achieved"
+    },
+    "totalStepsCompleted": {
+      "type": "number",
+      "default": 0,
+      "description": "Total steps completed across all time"
+    },
+    "totalPhasesCompleted": {
+      "type": "number",
+      "default": 0,
+      "description": "Total phases completed across all time"
+    },
+    "totalTasksCompleted": {
+      "type": "number",
+      "default": 0,
+      "description": "Total tasks completed across all time"
+    },
+    "brainDumpsCreated": {
+      "type": "number",
+      "default": 0,
+      "description": "Total brain dumps created"
+    },
+    "videosProcessed": {
+      "type": "number",
+      "default": 0,
+      "description": "Total videos processed"
+    },
+    "examPrepsStarted": {
+      "type": "number",
+      "default": 0,
+      "description": "Total exam preps started"
+    }
+  },
+  "required": []
+}

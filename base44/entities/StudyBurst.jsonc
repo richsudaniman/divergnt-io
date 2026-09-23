@@ -1,0 +1,99 @@
+{
+  "name": "StudyBurst",
+  "type": "object",
+  "properties": {
+    "examId": {
+      "type": "string",
+      "description": "The ID of the Exam this burst belongs to."
+    },
+    "title": {
+      "type": "string",
+      "description": "A short, clear title for the study burst."
+    },
+    "topic": {
+      "type": "string",
+      "description": "The main topic this burst covers."
+    },
+    "subtopic": {
+      "type": "string",
+      "description": "The specific subtopic this burst covers."
+    },
+    "taskType": {
+      "type": "string",
+      "enum": [
+        "review_notes",
+        "practice_questions",
+        "watch_video",
+        "summarize_concept",
+        "flashcards",
+        "break"
+      ],
+      "description": "The type of task the user needs to perform."
+    },
+    "taskDetails": {
+      "type": "string",
+      "description": "A more detailed description of the task."
+    },
+    "estimatedDuration": {
+      "type": "number",
+      "description": "Estimated time in minutes to complete the burst."
+    },
+    "scheduledDate": {
+      "type": "string",
+      "format": "date",
+      "description": "The date this burst is scheduled for."
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "default": "medium",
+      "description": "AI-determined priority based on exam proximity and difficulty."
+    },
+    "relatedMaterialIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "An array of ExamMaterial IDs related to this burst."
+    },
+    "linkedNoteSection": {
+      "type": "string",
+      "description": "Reference to specific section of notes this burst links to."
+    },
+    "isCompleted": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the user has marked this burst as complete."
+    },
+    "masteryScore": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "User's mastery score for this burst (0-100) based on performance."
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Important",
+          "Review Later",
+          "Confusing",
+          "Mastered"
+        ]
+      },
+      "default": [],
+      "description": "User-defined tags for quick review and filtering."
+    }
+  },
+  "required": [
+    "examId",
+    "title",
+    "topic"
+  ]
+}

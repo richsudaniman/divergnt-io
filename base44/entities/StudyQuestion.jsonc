@@ -1,0 +1,81 @@
+{
+  "name": "StudyQuestion",
+  "type": "object",
+  "properties": {
+    "examId": {
+      "type": "string",
+      "description": "The ID of the Exam this question belongs to."
+    },
+    "burstId": {
+      "type": "string",
+      "description": "The ID of the StudyBurst this question is associated with."
+    },
+    "topic": {
+      "type": "string",
+      "description": "The main topic this question covers."
+    },
+    "subtopic": {
+      "type": "string",
+      "description": "The specific subtopic this question covers."
+    },
+    "questionType": {
+      "type": "string",
+      "enum": [
+        "multiple_choice",
+        "short_answer",
+        "true_false",
+        "fill_blank"
+      ],
+      "description": "The type of question."
+    },
+    "questionText": {
+      "type": "string",
+      "description": "The question text."
+    },
+    "options": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "For multiple choice questions, the available options."
+    },
+    "correctAnswer": {
+      "type": "string",
+      "description": "The correct answer."
+    },
+    "explanation": {
+      "type": "string",
+      "description": "Explanation of why this is the correct answer."
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "easy",
+        "medium",
+        "hard"
+      ],
+      "default": "medium",
+      "description": "AI-estimated difficulty level."
+    },
+    "timesAttempted": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of times this question has been attempted."
+    },
+    "timesCorrect": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of times user got this question correct."
+    },
+    "lastAttempted": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this question was last attempted."
+    }
+  },
+  "required": [
+    "examId",
+    "questionText",
+    "correctAnswer"
+  ]
+}

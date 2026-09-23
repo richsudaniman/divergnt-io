@@ -1,0 +1,65 @@
+{
+  "name": "StudyFlashcard",
+  "type": "object",
+  "properties": {
+    "examId": {
+      "type": "string",
+      "description": "The ID of the Exam this flashcard belongs to."
+    },
+    "burstId": {
+      "type": "string",
+      "description": "The ID of the StudyBurst this flashcard is associated with."
+    },
+    "topic": {
+      "type": "string",
+      "description": "The main topic this flashcard covers."
+    },
+    "subtopic": {
+      "type": "string",
+      "description": "The specific subtopic this flashcard covers."
+    },
+    "question": {
+      "type": "string",
+      "description": "The front of the flashcard - the question or term."
+    },
+    "answer": {
+      "type": "string",
+      "description": "The back of the flashcard - the answer or definition."
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "easy",
+        "medium",
+        "hard"
+      ],
+      "default": "medium",
+      "description": "AI-estimated difficulty level."
+    },
+    "timesReviewed": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of times this flashcard has been reviewed."
+    },
+    "timesCorrect": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of times user got this flashcard correct."
+    },
+    "lastReviewed": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this flashcard was last reviewed."
+    },
+    "needsReview": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this flashcard needs review based on spaced repetition."
+    }
+  },
+  "required": [
+    "examId",
+    "question",
+    "answer"
+  ]
+}

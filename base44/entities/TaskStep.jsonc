@@ -1,0 +1,43 @@
+{
+  "name": "TaskStep",
+  "type": "object",
+  "properties": {
+    "taskId": {
+      "type": "string",
+      "description": "ID of the parent task"
+    },
+    "phaseId": {
+      "type": "string",
+      "description": "ID of the parent phase"
+    },
+    "stepOrder": {
+      "type": "number",
+      "description": "Order of this step within its phase (1, 2, 3, etc.)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Title of this step"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of what needs to be done in this step"
+    },
+    "isCompleted": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this step is completed"
+    },
+    "completedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this step was completed"
+    }
+  },
+  "required": [
+    "taskId",
+    "phaseId",
+    "stepOrder",
+    "title",
+    "description"
+  ]
+}

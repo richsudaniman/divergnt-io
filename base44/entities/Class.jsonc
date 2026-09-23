@@ -1,0 +1,56 @@
+{
+  "name": "Class",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the class/subject"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional description or subtitle for the class"
+    },
+    "color": {
+      "type": "string",
+      "enum": [
+        "blue",
+        "green",
+        "purple",
+        "orange",
+        "pink",
+        "indigo",
+        "amber",
+        "emerald"
+      ],
+      "default": "blue",
+      "description": "Color theme for the class folder"
+    },
+    "icon": {
+      "type": "string",
+      "enum": [
+        "BookOpen",
+        "Calculator",
+        "FlaskConical",
+        "Globe",
+        "Palette",
+        "Music",
+        "Zap",
+        "Target"
+      ],
+      "default": "BookOpen",
+      "description": "Icon identifier for the class"
+    },
+    "noteCount": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of notes/materials in this class"
+    },
+    "upcomingDeadline": {
+      "type": "string",
+      "description": "Next upcoming deadline or assignment"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

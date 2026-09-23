@@ -1,0 +1,31 @@
+{
+  "name": "ExamMaterial",
+  "type": "object",
+  "properties": {
+    "examId": {
+      "type": "string",
+      "description": "The ID of the Exam this material belongs to."
+    },
+    "fileName": {
+      "type": "string",
+      "description": "The original name of the uploaded file."
+    },
+    "fileType": {
+      "type": "string",
+      "description": "The MIME type of the file."
+    },
+    "fileUrl": {
+      "type": "string",
+      "description": "The URL of the uploaded file in storage."
+    },
+    "fileSize": {
+      "type": "number",
+      "description": "The size of the file in bytes."
+    }
+  },
+  "required": [
+    "examId",
+    "fileName",
+    "fileUrl"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "name": "ConceptMap",
+  "type": "object",
+  "properties": {
+    "videoId": {
+      "type": "string",
+      "description": "The ID of the video this map is associated with."
+    },
+    "topicTitle": {
+      "type": "string",
+      "description": "The title of the concept map topic."
+    },
+    "tiles": {
+      "type": "array",
+      "description": "The concept tiles created by the user.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "userSummary": {
+      "type": "string",
+      "description": "The user's summary based on their map."
+    },
+    "feedback": {
+      "type": "string",
+      "description": "AI-generated feedback on the user's summary and map."
+    }
+  },
+  "required": [
+    "videoId",
+    "topicTitle"
+  ]
+}

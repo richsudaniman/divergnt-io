@@ -1,0 +1,38 @@
+{
+  "name": "TaskPhase",
+  "type": "object",
+  "properties": {
+    "taskId": {
+      "type": "string",
+      "description": "ID of the parent task"
+    },
+    "phaseOrder": {
+      "type": "number",
+      "description": "Order of this phase (1, 2, 3, etc.)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Title of this phase"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of what needs to be done in this phase"
+    },
+    "isCompleted": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this phase is completed"
+    },
+    "completedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this phase was completed"
+    }
+  },
+  "required": [
+    "taskId",
+    "phaseOrder",
+    "title",
+    "description"
+  ]
+}

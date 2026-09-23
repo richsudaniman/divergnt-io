@@ -1,0 +1,218 @@
+{
+  "name": "ProcessedVideo",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "User-provided title for the video"
+    },
+    "original_filename": {
+      "type": "string",
+      "description": "Original uploaded filename"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL of the uploaded video file"
+    },
+    "file_size": {
+      "type": "number",
+      "description": "File size in bytes"
+    },
+    "duration": {
+      "type": "number",
+      "description": "Video duration in seconds"
+    },
+    "transcript": {
+      "type": "string",
+      "description": "Full timestamped transcript"
+    },
+    "processed_notes": {
+      "type": "string",
+      "description": "Final formatted markdown notes"
+    },
+    "note_chunks": {
+      "type": "array",
+      "description": "Tagged and chunked notes.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "chunk_id": {
+            "type": "number"
+          },
+          "text": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "processing_status": {
+      "type": "string",
+      "enum": [
+        "uploading",
+        "transcribing",
+        "processing",
+        "completed",
+        "error"
+      ],
+      "default": "uploading",
+      "description": "Current processing stage"
+    },
+    "stage_progress": {
+      "type": "object",
+      "properties": {
+        "stage1_chunking": {
+          "type": "boolean",
+          "default": false
+        },
+        "stage2_constraints": {
+          "type": "boolean",
+          "default": false
+        },
+        "stage3_decomposition": {
+          "type": "boolean",
+          "default": false
+        },
+        "stage4_formatting": {
+          "type": "boolean",
+          "default": false
+        },
+        "stage5_equations": {
+          "type": "boolean",
+          "default": false
+        },
+        "stage6_cognitive": {
+          "type": "boolean",
+          "default": false
+        },
+        "stage7_reinforcement": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "equations_found": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "equation": {
+            "type": "string"
+          },
+          "variables": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "description": "The symbol or name of the variable, e.g., 'Qd' or 'P'."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "A plain-English explanation of the variable."
+                },
+                "unit": {
+                  "type": "string",
+                  "description": "The unit of measurement, e.g., 'units' or 'dollars'."
+                }
+              },
+              "required": [
+                "value",
+                "description"
+              ]
+            }
+          },
+          "purpose": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "diagrams": {
+      "type": "array",
+      "description": "Visual diagrams generated from the content, if applicable.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "flowchart",
+              "mindmap",
+              "timeline",
+              "matrix",
+              "conceptmap"
+            ]
+          },
+          "code": {
+            "type": "string",
+            "description": "Diagram code in Mermaid.js syntax"
+          },
+          "recap": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "charts": {
+      "type": "array",
+      "description": "Data visualizations (bar/line charts) if the content contains quantitative data that meets specific criteria",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "bar",
+              "line"
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "x_axis_label": {
+            "type": "string"
+          },
+          "y_axis_label": {
+            "type": "string"
+          },
+          "caption": {
+            "type": "string",
+            "description": "Brief explanation of what the chart shows"
+          }
+        }
+      }
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Error details if processing failed"
+    }
+  },
+  "required": [
+    "title",
+    "original_filename"
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "name": "Exam",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the exam the user is preparing for."
+    },
+    "examDate": {
+      "type": "string",
+      "format": "date",
+      "description": "The date of the exam."
+    },
+    "studyPlan": {
+      "type": "object",
+      "properties": {
+        "topics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "subtopics": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "description": "The overall AI-generated study plan."
+    },
+    "progress": {
+      "type": "number",
+      "default": 0,
+      "description": "The user's overall progress, from 0 to 100."
+    },
+    "preferredSessionLength": {
+      "type": "number",
+      "enum": [
+        25,
+        45,
+        90
+      ],
+      "default": 45,
+      "description": "The user's preferred study session length in minutes."
+    }
+  },
+  "required": [
+    "name",
+    "examDate"
+  ]
+}
