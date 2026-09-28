@@ -1,62 +1,165 @@
-# Base44 Project
+<div align="center">
 
-Use this repository to run and edit the app locally, then publish changes back through Base44.
+# 🧠 divrgnt.io
 
-Any change pushed to the repo will also be reflected in the Base44 Builder.
+**A learning platform built for people with ADHD.**
 
-## Prerequisites
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?logo=tailwindcss&logoColor=white)
+![TanStack Query](https://img.shields.io/badge/TanStack_Query-5-FF4154?logo=reactquery&logoColor=white)
+![OpenAI Whisper](https://img.shields.io/badge/OpenAI-Whisper-412991?logo=openai&logoColor=white)
+![Base44](https://img.shields.io/badge/Built_with-Base44-000000)
 
-1. Clone the repository using the project's Git URL.
-2. Navigate to the project directory.
-3. Install dependencies: `npm install`.
-4. Install the Base44 CLI: `npm install -g base44@latest`.
-5. Install [Deno](https://docs.deno.com/runtime/getting_started/installation/) — the local Base44 backend runs on it.
+</div>
 
-Run `base44 --help` (or see the [CLI reference](https://docs.base44.com/developers/references/cli/commands/introduction)) for the full command surface.
+---
 
-## Run Locally
+Long lectures, messy notes, and "where do I even start?" are where ADHD students lose the most time. divrgnt breaks lectures into interactive study modules, turns spoken brain dumps into structured notes, and builds exam study plans around how much time is actually left.
 
-Three commands, from the project root:
+## 📑 Table of Contents
 
-```bash
-base44 login   # one-time per machine
-base44 link    # one-time per clone
-base44 dev     # local backend + frontend together
+- [Architecture](#️-architecture)
+- [Design Decisions](#-design-decisions)
+- [Challenges](#-challenges)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+- [Known Limitations](#️-known-limitations)
+
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph Client["React SPA (Vite)"]
+        P["Study tools<br/>Brain dump · Lectures · Exams · Tasks"]
+        V["VoiceRecorder<br/>MediaRecorder"]
+        C["Concept map canvas"]
+    end
+    subgraph Base44["Base44 platform"]
+        E["Entities DB<br/>14 schemas"]
+        F["Serverless functions<br/>5 Deno functions"]
+        L["InvokeLLM<br/>structured JSON"]
+        U["UploadFile"]
+    end
+    W["OpenAI Whisper"]
+    X["ElevenLabs<br/>podcast widget"]
+    V -->|base64 audio| F
+    F -->|speechToText| W
+    P --> L
+    P --> U
+    P --> E
+    F --> E
+    F --> L
+    P -.transcript.-> X
 ```
 
-Open the frontend URL that `base44 dev` prints (typically `http://localhost:5173`).
+- **Frontend:** a React 18 single-page app. The main flows are Brain Dump, Lecture Upload → Processing → Results, Exam Prep, Tasks, Classes, and Concept Maps. There's also an infinite canvas for visual thinking.
+- **Data model:** 14 entities in `base44/entities/`:
+  - **Capture:** `BrainDump`, `ProcessedVideo`
+  - **Courses:** `Class`, `Exam`, `ExamMaterial`
+  - **Study content:** `StudyNotesSection`, `StudyFlashcard`, `StudyQuestion`, `ConceptMap`, `StudyBurst`
+  - **Planning:** `Task`, `TaskPhase`, `TaskStep`
+  - **Motivation:** `UserProgress`
+- **Backend functions:** 5 Deno functions. `speechToText` proxies audio to Whisper. `parseSyllabus` extracts course structure. `getNextTaskSuggestion` picks what to do next. `getUserProgress` and `updateUserProgress` handle scoring.
+- **AI layer:** almost every feature is an `InvokeLLM` call with a `response_json_schema`, so AI output comes back as typed data (notes sections, flashcards, questions, tasks) that the UI can render and store directly.
 
-Notes:
+## 🧠 Design Decisions
 
-- **Every fresh clone needs `base44 link`.** It writes `base44/.app.jsonc` (the app-id pointer), which is deliberately gitignored. Your app id is in the Builder URL (`app.base44.com/apps/<id>/...`); `base44 link --help` shows the non-interactive flags.
-- **`base44 dev` runs the frontend for you** (via `site.serveCommand` in this repo's `base44/config.jsonc`) — never run `npm run dev` yourself: alone it serves a UI with no backend behind it (`[base44] Proxy not enabled`, every `/api` call fails), and alongside `base44 dev` the second Vite silently takes the next port and you end up looking at the wrong one.
-- **The app must be published at least once for the UI to load under `base44 dev`.** The frontend boots by fetching app settings from the hosted app; before the first publish that fails and every page redirects to login. The local API works regardless.
-- Entities, functions, and auth run locally — entity data is **in-memory only**, wiped when `base44 dev` restarts. Everything else (Core integrations, OAuth login) is forwarded to your deployed app. Full breakdown: [Local development overview](https://docs.base44.com/developers/backend/overview/local-dev/local-development-overview).
+- **One next action, not a to-do list:** `getNextTaskSuggestion` scores every open task on deadline urgency and progress, then asks the LLM to recommend exactly one concrete step and explain why. It's built to cut decision fatigue, the "which thing first?" paralysis that's common with ADHD.
+- **Big goals become phases, then steps:** tasks are broken into ordered phases and small steps, so there's always a next move that feels doable.
+- **Talk first, organize later:** speaking a brain dump has less friction than writing one. Audio is recorded in the browser and transcribed by Whisper. It's then restructured into Cornell notes with exam questions, extracted concepts, action items, and links to existing study material.
+- **API keys stay server-side:** the Whisper call runs in a serverless function, and the OpenAI key is read from environment secrets, so it never reaches the browser.
+- **Many ways into the same material:** one lecture can become mechanistic analogies, flashcards, dynamic Q&A, real-world applications, a creative project, or a podcast. Students pick the mode that holds their attention.
+- **Active recall over re-reading:** concept maps start with 5–7 AI-extracted keywords that the student connects themselves. The AI then gives feedback on the student's own summary, instead of handing them a finished map.
+- **Diagrams only when they help:** the note-generation prompt allows flowcharts and diagrams only under strict conditions, to avoid visual clutter.
+- **Motivation through progress:** the "Academic Weapon" score gives points for steps, phases, finished tasks and brain dumps, with streaks and levels from *Butter Knife* up to *Reality Bender*.
 
-## Frontend Only, Hosted Backend
+## 🐛 Challenges
 
-To work on just the frontend against your app's live hosted backend:
+### 1. Getting voice recordings to Whisper through a serverless function
+The browser records `webm` audio with `MediaRecorder`, but serverless functions take JSON. Audio is base64-encoded on the client, decoded back to bytes in the Deno function, then rebuilt as multipart form data for Whisper. I added validation for invalid base64, missing MIME types, and empty transcriptions (with a "speak closer to the mic" hint), plus timestamped logging at every stage to trace failures.
 
-```bash
-base44 dev --remote
+### 2. Keeping AI-generated notes readable
+Early LLM notes over-used diagrams and formatting, which is the opposite of what an ADHD reader needs. The note-generation prompt became a staged pipeline with explicit rules for when visuals are allowed, and every output is schema-constrained so the UI controls the layout.
+
+### 3. Build errors after moving off the builder
+After syncing the project to GitHub and building it locally, some page components failed to build because of how they were named. Renaming them fixed the build.
+
+## ✨ Features
+
+- **🎙️ Brain dump:** type or talk; get Cornell notes, key concepts, action items, and links to your existing materials
+- **🎬 Lecture processing:** upload a lecture and get structured, sectioned notes with diagrams where they help
+- **🧩 Learning modes:** analogical analysis, flashcard generator, dynamic Q&A, application generator, creation lab, and a social-media-style project creator
+- **🎧 Podcast mode:** turn a transcript into a conversational audio session through an ElevenLabs voice agent
+- **🗺️ Concept maps:** build maps from AI-suggested keywords and get feedback on your own summary
+- **📅 Exam prep:** upload materials, set the exam date and session length, and get notes plus a study schedule scaled to the days left
+- **📝 Practice:** flashcard review, practice questions, full practice exams, an AI tutor, and a Pomodoro timer
+- **✅ Task breakdown:** turn assignments into phases and steps, and get a single "do this next" suggestion
+- **🏫 Classes and calendar:** syllabus parsing, a smart calendar, and time-block scheduling
+- **🏆 Academic Weapon score:** points, streaks, and levels for staying consistent
+
+## 🧰 Tech Stack
+
+| Layer | Technologies |
+|---|---|
+| **Frontend** | React 18, Vite, React Router |
+| **Styling / UI** | Tailwind CSS, Radix UI, shadcn/ui, Framer Motion, Lucide icons |
+| **Data & State** | TanStack Query, React Hook Form, Zod |
+| **Visuals** | Mermaid (diagrams), Recharts, custom infinite canvas, math rendering |
+| **Backend / Platform** | Base44 (auth, database, hosting, serverless functions) |
+| **AI & Audio** | Base44 InvokeLLM (structured JSON), OpenAI Whisper, ElevenLabs Conversational AI |
+
+## 📁 Project Structure
+
+```
+divergnt-io/
+├── base44/
+│   ├── entities/        # Data models
+│   ├── functions/       # speechToText, parseSyllabus, task suggestions, progress
+│   └── config.jsonc
+├── src/
+│   ├── components/
+│   │   ├── brain-dump/  # Note structuring
+│   │   ├── learning/    # Learning modes and tools
+│   │   ├── exam/        # AI tutor, Pomodoro
+│   │   ├── study/       # Flashcards, practice questions and exams
+│   │   ├── integration/ # Knowledge graph, study path recommender
+│   │   ├── tasks/       # Task breakdown and next-step suggestions
+│   │   ├── calendar/    # Smart calendar, time blocking
+│   │   └── ui/          # shadcn/ui primitives
+│   ├── pages/
+│   └── main.jsx
+├── package.json
+└── vite.config.js
 ```
 
-⚠️ In this mode writes go to your app's **production data** — plain `base44 dev` keeps everything local.
+## 🚀 Getting Started
 
-## Publish Your Changes
+### Prerequisites
+- Node.js 18+ and npm
+- [Deno](https://docs.deno.com/runtime/getting_started/installation/), which the local Base44 backend runs on
+- Base44 CLI: `npm install -g base44@latest`
+- An `OPENAI_API_KEY` secret set in your Base44 app (for voice transcription)
 
-After pushing your changes to git, open the Base44 dashboard and publish the app:
+### Run locally
 
 ```bash
-base44 dashboard open
+git clone https://github.com/richsudaniman/divergnt-io.git
+cd divergnt-io
+npm install
+base44 login   # once per machine
+base44 link    # once per clone
+base44 dev     # runs the local backend and frontend together
 ```
 
-This repo syncs to Base44 through git, so publish from the dashboard rather than `base44 deploy` — a CLI deploy ships your local tree directly, bypassing the sync, and the deployed state silently diverges from the repo.
+> Use `base44 dev` rather than `npm run dev`. On its own, Vite serves the UI with no backend behind it.
 
-## Docs & Support
+## ⚠️ Known Limitations
 
-GitHub integration: [https://docs.base44.com/developers/app-code/local-development/github](https://docs.base44.com/developers/app-code/local-development/github)
+- **Video transcription is simulated.** Uploaded lecture videos aren't transcribed from their audio yet; the LLM generates a representative transcript from the video's title. Uploaded documents and voice recordings are processed for real. Real video transcription (for example, extracting the audio and sending it through the existing Whisper function) is the next step.
 
-Local development: [https://docs.base44.com/developers/backend/overview/local-dev/local-development-overview](https://docs.base44.com/developers/backend/overview/local-dev/local-development-overview)
+## 📬 Contact
 
-Support: [https://app.base44.com/support](https://app.base44.com/support)
+Built by **Jalal Abdelrahim** · [GitHub](https://github.com/richsudaniman)
